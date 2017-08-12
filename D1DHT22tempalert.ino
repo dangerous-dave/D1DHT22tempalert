@@ -8,11 +8,11 @@
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <DHT.h>
-#define DHTTYPE DHT11
-#define DHTPIN  14
+#define DHTTYPE DHT22
+#define DHTPIN 2
 
 const char* ssid     = "The Burrow 2.4";
-const char* password = "WifiKey";
+const char* password = "PerdidoKey13";
 
 ESP8266WebServer server(80);
  
@@ -24,7 +24,7 @@ ESP8266WebServer server(80);
 // higher the value.  The default for a 16mhz AVR is a value of 6.  For an
 // Arduino Due that runs at 84mhz a value of 30 works.
 // This is for the ESP8266 processor on ESP-01 
-DHT dht(DHTPIN, DHTTYPE, 11); // 11 works for ESP8266
+DHT dht(DHTPIN, DHTTYPE, 11); // 11 works for ESP8266 @ 80 mhz
  
 float humidity, temp_f;  // Values read from sensor
 String webString="";     // String to display
@@ -33,7 +33,7 @@ unsigned long previousMillis = 0;        // will store last temp was read
 const long interval = 2000;              // interval at which to read sensor
  
 void handle_root() {
-  server.send(200, "text/plain", "Hello from the ESP8266 http server!  Navigate to XXX.XXX.XXX.XXX/temp or /humidity");
+  server.send(200, "text/plain", "D1 Mini Pro http server initialized. Navigate to XXX.XXX.XXX.XXX/t /h or /both");
   delay(100);
 }
  
@@ -69,14 +69,6 @@ void setup(void)
 
   server.on("/h", [](){  // if you add this subdirectory to your webserver call, you get text below :)
     gettemperature();           // read sensor
-    webString="Humidity: "+String((int)humidity)+"%";
-    server.send(200, "text/plain", webString);               // send to browser when asked
-  });
-
-  server.on("/both", [](){  // if you add this subdirectory to your webserver call, you get text below :)
-    gettemperature();       // read sensor
-    webString="Temperature: "+String((int)temp_f)+" F";   // Arduino has a hard time with float to string
-    server.send(200, "text/plain", webString);            // send to browser when asked
     webString="Humidity: "+String((int)humidity)+"%";
     server.send(200, "text/plain", webString);               // send to browser when asked
   });
